@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Two Column Layout</title>
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="left-column"> 
+        <form action="/" method="POST" id="myForm" enctype="multipart/form-data" >
+            <!-- Row 1: Button with List -->
+            <div class="row"> <label for="selectList">Select an Option:</label> 
+                <select id="selectList" name="select_option">
+                    <option value="llama3.2:3b">General LLM</option>
+                    <option value="llama3.2-vision">Vison LLM</option>
+                    <option value="qwen2.5-coder:32b">Qwen 2.5</option>
+                </select> 
+            </div> 
+            
+            <!-- Row 2: Image -->
+            <div class="row"> 
+                <img src="{{ url_for('static', filename='images/aihub.png') }}" alt="Sample Image" class="image">
+            </div>
+            <!-- Row 3: Input Field and Buttons -->
+            <div class="row"> 
+                <input type="text" id="textInput" name="text_input" placeholder="Enter text"> 
+                <input type="file" id="fileInput" name="file_input">
+                <button type = "submit" id="submitButton">Submit</button> 
+            </div>
+        </form>
+    </div>
+
+
+    <div class="right-column">
+        <div class="output">
+            <h2 style="color: antiquewhite;">Answer:</h2>
+            <p id="outputText" style="color: antiquewhite;" >Output Text Here</p> 
+            <img id="outputImage" src="{{ url_for('static', filename='images/aihub.png') }}" alt="Output Image" class="output-image">
+        </div>
+    </div>
+</div>
+
+<script> 
+    document.addEventListener("DOMContentLoaded", function () { 
+        const selectList = document.getElementById("selectList"); 
+        const imageElement = document.querySelector(".image"); 
+        
+        selectList.addEventListener("change", function () { 
+            const selectedOption = selectList.value;
+             
+            // Define the image sources based on the selected option 
+            const imageSources = { 
+                "llama3.2:3b": "{{ url_for('static', filename='images/aihub.png') }}", 
+                "llama3.2-vision": "{{ url_for('static', filename='images/th.jpeg') }}", 
+                "qwen2.5-coder:32b": "{{ url_for('static', filename='images/qwen.jpeg') }}" }; 
+
+
+                // Change the image source based on the selected option 
+                imageElement.src = imageSources[selectedOption]; 
+                }); 
+
+            const form = document.getElementById('myForm'); 
+            form.addEventListener('submit', async function(event) { 
+                event.preventDefault(); // Prevent the default form submission 
+                const formData = new FormData(form); 
+                outputText.innerText = 'Loading'
+                try { 
+                    const response = await fetch('/', { 
+                        method: 'POST', 
+                        body: formData 
+                    }); 
+
+                    if (!response.ok) { 
+                        throw new Error(`HTTP error! Status: ${response.status}`); 
+                    } 
+                        
+                        const result = await response.json(); 
+                        if (result.output_text) { 
+                            outputText.innerText = result.output_text
+                        } 
+                        if (result.output_image) { 
+                            outputImage.src = result.output_image;
+                        } 
+                    } catch (error) { 
+                        console.error('Error submitting form:', error); 
+                        outputText.innerText = 'Error submitting form. Please try again.'; 
+                        outputImage.src = ''; // Clear the output image in case of error
+                         }
+            });
+    });
+
+
+</script>
+
+{% endblock %}
