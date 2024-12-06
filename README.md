@@ -2,7 +2,7 @@
 A simple flask UI that will run three model: llama Vison, LLama 3.2 3b and qwen 32b-coder using ollama.
 
 # How to Run
-1.Install Python3 and Ollama.
+1.Install Python3 and Ollama.#
 2.Install pip3.
 3.Install all the dependencies.
 4.In ollama download llama3.2:3b, llamavison, and qwen 2.5 coder
