@@ -10,7 +10,7 @@ A simple flask UI that will run three model: llama Vison, LLama 3.2 3b and qwen 
 6.In your browser go to 127.0.0.1/5000.
 7. You will see the app running.
 
-#How to use
+# How to use
 Before everything you need to be sure that you have all the dependencies as wella the Ollama models.After running the app:
 
 1.Select the models you need to use.
